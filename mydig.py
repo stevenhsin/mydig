@@ -23,30 +23,31 @@ def dig(domain, root):
     val = str(val)
     val = val.splitlines()
 
-    if val[val.index(";ANSWER") + 1] == ";AUTHORITY":  # if we don't get the answer
-        if val[val.__len__() - 1] != ";ADDITIONAL":  # if there are IPs given after ;ADDITIONAL
+    if val[val.index(";ANSWER") + 1] == ";AUTHORITY":                                       # if we don't get the answer
+        if val[val.__len__() - 1] != ";ADDITIONAL":                                         # if there are IPs given after ;ADDITIONAL
             remove_aaaa(val)
-            if val[val.__len__() - 1] == ";ADDITIONAL":  # A exists in ;ADDITIONAL
+            if val[val.__len__() - 1] == ";ADDITIONAL":                                     # A doesn't exist in ;ADDITIONAL
                 penultimate_line = val[val.__len__() - 2]
                 penultimate_line = penultimate_line.split(" ")
                 new_name = penultimate_line[penultimate_line.__len__() - 1]
                 dig(new_name, startServer)
-            else:  # A doesn't exist in ;ADDITIONAL
+            else:                                                                           # A exists in ;ADDITIONAL
                 last_line = val[val.__len__() - 1]
                 last_line = last_line.split(" ")
                 dig(domain, last_line[4])
-        else:  # no IP addresses exist in ;ADDITIONAL
+        else:                                                                               # no IP addresses exist in ;ADDITIONAL
             penultimate_line = val[val.__len__() - 2]
             penultimate_line = penultimate_line.split(" ")
             new_name = penultimate_line[penultimate_line.__len__() - 1]
             dig(new_name, startServer)
-    if not val[val.index(";ANSWER") + 1].__contains__(name):
-        temp_answer = val[val.index(";ANSWER") + 1]
-        temp_answer = temp_answer.split(" ")
-        next_ip = temp_answer[temp_answer.__len__() - 1]
-        dig(name, next_ip)
     else:
-        print(val[val.index(";ANSWER") + 1])
+        if not val[val.index(";ANSWER") + 1].__contains__(name):
+            temp_answer = val[val.index(";ANSWER") + 1]
+            temp_answer = temp_answer.split(" ")
+            next_ip = temp_answer[temp_answer.__len__() - 1]
+            dig(name, next_ip)
+        else:
+            print(val[val.index(";ANSWER") + 1])
 
 
 t0 = time.time()
@@ -59,7 +60,7 @@ print(request_time)
 print(total)
 
 # query = dns.message.make_query("www.amazon.com", 1)
-# val = dns.query.udp(query, "204.13.251.31", 5)
+# val = dns.query.udp(query, startServer, 5)
 # print(val)
 # val = str(val)
 # val = val.splitlines()
