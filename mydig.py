@@ -56,7 +56,16 @@ def dig(domain, root):
 
 statements = list()
 name = "www.amazon.com"  # sys.argv[1]
-print("Domain Name: " + name)
+if name[name.__len__() - 1] != ".":
+    question = name + ". In A"
+    question = question.split(" ")
+    print("QUESTION: SECTION")
+    print('{0[0]:50}{0[1]:10}{0[2]}'.format(question) + "\n")
+else:
+    question = name + " In A"
+    question = question.split(" ")
+    print("QUESTION: SECTION")
+    print('{0[0]:50}{0[1]:10}{0[2]}'.format(question) + "\n")
 startServer = "192.203.230.10"
 
 request_time = datetime.datetime.now()
@@ -68,22 +77,9 @@ total = t1 - t0
 total = total * 1000
 total = round(total)
 
-print(request_time)
-print(total)
+print("ANSWER SECTION:")
 for address in statements:
-    print(address)
-
-# query = dns.message.make_query("ns4.p31.dynect.net.", 1)
-# val = dns.query.udp(query, "204.13.251.31", 5)
-# print(val)
-# val = str(val)
-# val = val.splitlines()
-# lastLine = val[val.__len__() - 1]
-# lastLine = lastLine.split(" ")
-# nextName = lastLine[0]
-# nextIP = lastLine[4]
-# print(nextName)
-# print(nextIP)
-
-# query = dns.message.make_query(name, 1)
-# val = dns.query.udp(query, startServer)
+    address = address.split(" ")
+    print('{0[0]:<40}{0[1]:10}{0[2]:10}{0[3]:10}{0[4]:15}'.format(address))
+print("\nQUERY TIME: " + total.__str__() + " msec")
+print("\nWHEN: " + request_time.__str__())
