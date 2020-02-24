@@ -24,7 +24,10 @@ def dig(domain, root):
         if val[val.__len__() - 1] != ";ADDITIONAL":                     # if there are IPs given after ;ADDITIONAL
             remove_aaaa(val)
             if val[val.__len__() - 1] == ";ADDITIONAL":                 # A exists in ;ADDITIONAL
-                print("how?")
+                penultimate_line = val[val.__len__() - 2]
+                penultimate_line = penultimate_line.split(" ")
+                new_name = penultimate_line[penultimate_line.__len__() - 1]
+                dig(new_name, startServer)
             else:                                                       # A doesn't exist in ;ADDITIONAL
                 last_line = val[val.__len__() - 1]
                 last_line = last_line.split(" ")
