@@ -1,8 +1,9 @@
 import dns.query
 import time
+import sys
 
-# name = input("Domain Name: ")
-name = "www.cnn.com"
+name = "www.cnn.com" #sys.argv[1]
+print("Domain Name: " + name)
 startServer = "192.203.230.10"
 
 
@@ -41,7 +42,13 @@ def dig(domain, root):
         print(val[val.index(";ANSWER") + 1])
 
 
+t0 = time.time()
 dig(name, startServer)
+t1 = time.time()
+total = t1 - t0
+total = total * 1000
+
+print(total)
 
 # query = dns.message.make_query(name, 1)
 # val = dns.query.udp(query, startServer, 5)
