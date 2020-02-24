@@ -55,17 +55,17 @@ def dig(domain, root):
 
 
 statements = list()
-name = "www.amazon.com"  # sys.argv[1]
+name = sys.argv[1]
 if name[name.__len__() - 1] != ".":
     question = name + ". In A"
     question = question.split(" ")
     print("QUESTION: SECTION")
-    print('{0[0]:50}{0[1]:10}{0[2]}'.format(question) + "\n")
+    print('{0[0]:50}{0[1]:5}{0[2]}'.format(question) + "\n")
 else:
     question = name + " In A"
     question = question.split(" ")
     print("QUESTION: SECTION")
-    print('{0[0]:50}{0[1]:10}{0[2]}'.format(question) + "\n")
+    print('{0[0]:50}{0[1]:5}{0[2]}'.format(question) + "\n")
 startServer = "192.203.230.10"
 
 request_time = datetime.datetime.now()
@@ -80,6 +80,6 @@ total = round(total)
 print("ANSWER SECTION:")
 for address in statements:
     address = address.split(" ")
-    print('{0[0]:<40}{0[1]:10}{0[2]:10}{0[3]:10}{0[4]:15}'.format(address))
+    print('{0[0]:<40}{0[1]:10}{0[2]:5}{0[3]:10}{0[4]:15}'.format(address))
 print("\nQUERY TIME: " + total.__str__() + " msec")
-print("\nWHEN: " + request_time.__str__())
+print("WHEN: " + request_time.__str__())
