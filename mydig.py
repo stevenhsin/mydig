@@ -17,6 +17,33 @@ def remove_aaaa(val):
     return val
 
 
+def dig_cname(domain, root):
+    query = dns.message.make_query(domain, 1)
+    val = dns.query.udp(query, root, 5)
+    val = str(val)
+    val = val.splitlines()
+
+    if val[val.index(";ANSWER") + 1] == ";AUTHORITY":                                       # if we don't get the answer
+        if val[val.__len__() - 1] != ";ADDITIONAL":                                         # if there are IPs given after ;ADDITIONAL
+            remove_aaaa(val)
+            if val[val.__len__() - 1] == ";ADDITIONAL":                                     # A doesn't exist in ;ADDITIONAL
+                penultimate_line = val[val.__len__() - 2]
+                penultimate_line = penultimate_line.split(" ")
+                new_name = penultimate_line[penultimate_line.__len__() - 1]
+                dig_cname(new_name, startServer)
+            else:                                                                           # A exists in ;ADDITIONAL
+                last_line = val[val.__len__() - 1]
+                last_line = last_line.split(" ")
+                dig_cname(domain, last_line[4])
+        else:                                                                               # no IP addresses exist in ;ADDITIONAL
+            penultimate_line = val[val.__len__() - 2]
+            penultimate_line = penultimate_line.split(" ")
+            new_name = penultimate_line[penultimate_line.__len__() - 1]
+            dig_cname(new_name, startServer)
+    else:
+        print(val[val.index(";ANSWER") + 1])
+
+
 def dig(domain, root):
     query = dns.message.make_query(domain, 1)
     val = dns.query.udp(query, root, 5)
@@ -41,13 +68,20 @@ def dig(domain, root):
             new_name = penultimate_line[penultimate_line.__len__() - 1]
             dig(new_name, startServer)
     else:
-        if not val[val.index(";ANSWER") + 1].__contains__(name):
+        if not val[val.index(";ANSWER") + 1].__contains__(name):                            # answer of other server found
             temp_answer = val[val.index(";ANSWER") + 1]
             temp_answer = temp_answer.split(" ")
             next_ip = temp_answer[temp_answer.__len__() - 1]
             dig(name, next_ip)
         else:
-            print(val[val.index(";ANSWER") + 1])
+            if val[val.index(";ANSWER") + 1].__contains__("CNAME"):
+                cname_ans = val[val.index(";ANSWER") + 1]
+                cname_ans = cname_ans.split(" ")
+                cname = cname_ans[cname_ans.__len__() - 1]
+                print(val[val.index(";ANSWER") + 1])
+                dig_cname(cname, startServer)
+            else:
+                print(val[val.index(";ANSWER") + 1])
 
 
 t0 = time.time()
@@ -59,8 +93,8 @@ total = round(total, 2)
 print(request_time)
 print(total)
 
-# query = dns.message.make_query("www.amazon.com", 1)
-# val = dns.query.udp(query, startServer, 5)
+# query = dns.message.make_query("e15316.e22.akamaiedge.net.", 1)
+# val = dns.query.udp(query, "192.35.51.30", 5)
 # print(val)
 # val = str(val)
 # val = val.splitlines()
