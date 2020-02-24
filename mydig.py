@@ -47,6 +47,7 @@ dig(name, startServer)
 t1 = time.time()
 total = t1 - t0
 total = total * 1000
+total = round(total, 2)
 
 print(total)
 
