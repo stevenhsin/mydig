@@ -3,11 +3,6 @@ import time
 import datetime
 import sys
 
-name = "www.cnn.com"  # sys.argv[1]
-print("Domain Name: " + name)
-startServer = "192.203.230.10"
-request_time = datetime.datetime.now()
-
 
 # leaves only the A lines
 def remove_aaaa(val):
@@ -45,6 +40,7 @@ def dig_cname(domain, root):
 
 
 def dig(domain, root):
+    global name
     query = dns.message.make_query(domain, 1)
     val = dns.query.udp(query, root, 5)
     val = str(val)
@@ -54,16 +50,16 @@ def dig(domain, root):
         if val[val.__len__() - 1] != ";ADDITIONAL":                                         # if there are IPs given after ;ADDITIONAL
             remove_aaaa(val)
             if val[val.__len__() - 1] == ";ADDITIONAL":                                     # A doesn't exist in ;ADDITIONAL
-                penultimate_line = val[val.__len__() - 2]
+                penultimate_line = val[val.index(";AUTHORITY") + 1]
                 penultimate_line = penultimate_line.split(" ")
                 new_name = penultimate_line[penultimate_line.__len__() - 1]
                 dig(new_name, startServer)
             else:                                                                           # A exists in ;ADDITIONAL
-                last_line = val[val.__len__() - 1]
+                last_line = val[val.index(";ADDITIONAL") + 1]
                 last_line = last_line.split(" ")
-                dig(domain, last_line[4])
+                dig(domain, last_line[last_line.__len__() - 1])
         else:                                                                               # no IP addresses exist in ;ADDITIONAL
-            penultimate_line = val[val.__len__() - 2]
+            penultimate_line = val[val.index(";AUTHORITY") + 1]
             penultimate_line = penultimate_line.split(" ")
             new_name = penultimate_line[penultimate_line.__len__() - 1]
             dig(new_name, startServer)
@@ -79,22 +75,27 @@ def dig(domain, root):
                 cname_ans = cname_ans.split(" ")
                 cname = cname_ans[cname_ans.__len__() - 1]
                 print(val[val.index(";ANSWER") + 1])
-                dig_cname(cname, startServer)
+                name = cname
+                dig(cname, startServer)
             else:
                 print(val[val.index(";ANSWER") + 1])
 
 
+name = "www.amazon.com"  # sys.argv[1]
+print("Domain Name: " + name)
+startServer = "192.203.230.10"
+request_time = datetime.datetime.now()
 t0 = time.time()
 dig(name, startServer)
 t1 = time.time()
 total = t1 - t0
 total = total * 1000
-total = round(total, 2)
+total = round(total)
 print(request_time)
 print(total)
 
-# query = dns.message.make_query("e15316.e22.akamaiedge.net.", 1)
-# val = dns.query.udp(query, "192.35.51.30", 5)
+# query = dns.message.make_query("ns4.p31.dynect.net.", 1)
+# val = dns.query.udp(query, "204.13.251.31", 5)
 # print(val)
 # val = str(val)
 # val = val.splitlines()
