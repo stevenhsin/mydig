@@ -58,13 +58,16 @@ statements = list()
 name = "www.amazon.com"  # sys.argv[1]
 print("Domain Name: " + name)
 startServer = "192.203.230.10"
+
 request_time = datetime.datetime.now()
 t0 = time.time()
 dig(name, startServer)
 t1 = time.time()
+
 total = t1 - t0
 total = total * 1000
 total = round(total)
+
 print(request_time)
 print(total)
 for address in statements:
