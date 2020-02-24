@@ -15,7 +15,6 @@ def remove_aaaa(val):
 
 
 def dig(domain, root):
-    print(root)
     query = dns.message.make_query(domain, 1)
     val = dns.query.udp(query, root, 5)
     val = str(val)
@@ -35,6 +34,8 @@ def dig(domain, root):
             penultimate_line = penultimate_line.split(" ")
             new_name = penultimate_line[penultimate_line.__len__() - 1]
             dig(new_name, startServer)
+    else:
+        print(val[val.index(";ANSWER") + 1])
 
 
 dig(name, startServer)
