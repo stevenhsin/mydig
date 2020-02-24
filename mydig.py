@@ -30,6 +30,11 @@ def dig(domain, root):
                 last_line = val[val.__len__() - 1]
                 last_line = last_line.split(" ")
                 dig(domain, last_line[4])
+        else:                                                           # no IP addresses exist in ;ADDITIONAL
+            penultimate_line = val[val.__len__() - 2]
+            penultimate_line = penultimate_line.split(" ")
+            new_name = penultimate_line[penultimate_line.__len__() - 1]
+            dig(new_name, startServer)
 
 
 dig(name, startServer)
