@@ -12,33 +12,6 @@ def remove_aaaa(val):
     return val
 
 
-def dig_cname(domain, root):
-    query = dns.message.make_query(domain, 1)
-    val = dns.query.udp(query, root, 5)
-    val = str(val)
-    val = val.splitlines()
-
-    if val[val.index(";ANSWER") + 1] == ";AUTHORITY":                                       # if we don't get the answer
-        if val[val.__len__() - 1] != ";ADDITIONAL":                                         # if there are IPs given after ;ADDITIONAL
-            remove_aaaa(val)
-            if val[val.__len__() - 1] == ";ADDITIONAL":                                     # A doesn't exist in ;ADDITIONAL
-                penultimate_line = val[val.__len__() - 2]
-                penultimate_line = penultimate_line.split(" ")
-                new_name = penultimate_line[penultimate_line.__len__() - 1]
-                dig_cname(new_name, startServer)
-            else:                                                                           # A exists in ;ADDITIONAL
-                last_line = val[val.__len__() - 1]
-                last_line = last_line.split(" ")
-                dig_cname(domain, last_line[4])
-        else:                                                                               # no IP addresses exist in ;ADDITIONAL
-            penultimate_line = val[val.__len__() - 2]
-            penultimate_line = penultimate_line.split(" ")
-            new_name = penultimate_line[penultimate_line.__len__() - 1]
-            dig_cname(new_name, startServer)
-    else:
-        print(val[val.index(";ANSWER") + 1])
-
-
 def dig(domain, root):
     global name
     query = dns.message.make_query(domain, 1)
@@ -74,13 +47,14 @@ def dig(domain, root):
                 cname_ans = val[val.index(";ANSWER") + 1]
                 cname_ans = cname_ans.split(" ")
                 cname = cname_ans[cname_ans.__len__() - 1]
-                print(val[val.index(";ANSWER") + 1])
+                statements.append(val[val.index(";ANSWER") + 1])
                 name = cname
                 dig(cname, startServer)
             else:
-                print(val[val.index(";ANSWER") + 1])
+                statements.append(val[val.index(";ANSWER") + 1])
 
 
+statements = list()
 name = "www.amazon.com"  # sys.argv[1]
 print("Domain Name: " + name)
 startServer = "192.203.230.10"
@@ -93,6 +67,8 @@ total = total * 1000
 total = round(total)
 print(request_time)
 print(total)
+for address in statements:
+    print(address)
 
 # query = dns.message.make_query("ns4.p31.dynect.net.", 1)
 # val = dns.query.udp(query, "204.13.251.31", 5)
