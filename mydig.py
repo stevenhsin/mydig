@@ -66,20 +66,24 @@ else:
     question = question.split(" ")
     print("QUESTION: SECTION")
     print('{0[0]:50}{0[1]:5}{0[2]}'.format(question) + "\n")
+
 startServer = "192.203.230.10"
 
-request_time = datetime.datetime.now()
-t0 = time.time()
-dig(name, startServer)
-t1 = time.time()
+try:
+    request_time = datetime.datetime.now()
+    t0 = time.time()
+    dig(name, startServer)
+    t1 = time.time()
 
-total = t1 - t0
-total = total * 1000
-total = round(total)
+    total = t1 - t0
+    total = total * 1000
+    total = round(total)
 
-print("ANSWER SECTION:")
-for address in statements:
-    address = address.split(" ")
-    print('{0[0]:<40}{0[1]:10}{0[2]:5}{0[3]:10}{0[4]:15}'.format(address))
-print("\nQUERY TIME: " + total.__str__() + " msec")
-print("WHEN: " + request_time.__str__())
+    print("ANSWER SECTION:")
+    for address in statements:
+        address = address.split(" ")
+        print('{0[0]:<40}{0[1]:10}{0[2]:5}{0[3]:10}{0[4]:15}'.format(address))
+    print("\nQUERY TIME: " + total.__str__() + " msec")
+    print("WHEN: " + request_time.__str__())
+except:
+    print("The DNS Operation timed out. Please try again.")
