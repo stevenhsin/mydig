@@ -57,7 +57,7 @@ def dig(domain, root):
 statements = list()
 name = sys.argv[1]
 if name[name.__len__() - 1] != ".":
-    question = name + ". In A"
+    question = name + ". IN A"
     question = question.split(" ")
     print("QUESTION: SECTION")
     print('{0[0]:50}{0[1]:5}{0[2]}'.format(question) + "\n")
